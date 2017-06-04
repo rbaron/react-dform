@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -44,11 +45,21 @@ const defaultSchema = {
 }
 
 class SchemaEditor extends React.Component {
+  static propTypes = {
+    defaultSchema: PropTypes.object,
+    onSchemaChange: PropTypes.func,
+  }
+
+  static defaultProps = {
+    defaultSchema: defaultSchema,
+    onSchemaChange: () => {},
+  }
+
   constructor(props) {
     super(props)
     this.state = {
-      schema: defaultSchema,
-      schemaText: JSON.stringify(defaultSchema, null, 2),
+      schema: props.defaultSchema,
+      schemaText: JSON.stringify(props.defaultSchema, null, 2),
       schemaError: null,
       formState: {
         showForm: true,
@@ -65,10 +76,12 @@ class SchemaEditor extends React.Component {
   onSchemaChange(newSchema) {
     this.setState({schemaText: newSchema})
     try {
+      const json = JSON.parse(newSchema)
       this.setState({
-        schema: JSON.parse(newSchema),
+        schema: json,
         schemaError: null,
       })
+      this.props.onSchemaChange(json)
     } catch (e) {
       if (e instanceof SyntaxError) {
         this.setState({schemaError: e.message});

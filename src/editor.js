@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { StyleSheet, css } from 'aphrodite';
 
 import { DForm } from './dform'
-
-import styles from './editor.css'
 
 const defaultSchema = {
     cond: {
@@ -43,6 +42,20 @@ const defaultSchema = {
       }],
     }],
 }
+
+const styles = StyleSheet.create({
+  app: {
+    display: 'flex',
+    height: '100%',
+  },
+  col: {
+    width: '50%',
+  },
+  textarea: {
+    width: '80%',
+    'font-size': '15px',
+  },
+})
 
 class SchemaEditor extends React.Component {
   static propTypes = {
@@ -109,16 +122,16 @@ class SchemaEditor extends React.Component {
 
   render() {
     return (
-      <div className={styles.app}>
-        <div className={styles.col}>
+      <div className={css(styles.app)}>
+        <div className={css(styles.col)}>
           <h1>Schema</h1>
           <textarea
-              className={styles.textarea}
+              className={css(styles.textarea)}
               rows={30}
               value={this.state.schemaText}
               onChange={e => this.onSchemaChange(e.target.value)}/>
         </div>
-        <div className={styles.col}>
+        <div className={css(styles.col)}>
           <h1>Form</h1>
           { this.renderForm() }
         </div>

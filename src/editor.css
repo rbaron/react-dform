@@ -1,0 +1,13 @@
+.app {
+  display: flex;
+  height: 100%;
+}
+
+.col {
+  width: 50%;
+}
+
+.textarea {
+  width: 80%;
+  font-size: 15px;
+}

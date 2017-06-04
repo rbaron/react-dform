@@ -1,6 +1,6 @@
 # react-dform
 
-Schema-based dynamic forms for React. It uses the schema defined in [dform](https://github.com/rbaron/dform). In addition to the dynamic form component (`DForm`), there's also a built-in `SchemaEditor` component for creating and validating schemas.
+Schema-based dynamic forms for React. It uses the schema defined as expected by [dform](https://github.com/rbaron/dform). In addition to the dynamic form component (`DForm`), there's also a built-in `SchemaEditor` component for creating and validating schemas:
 
 ![Built-in schema editor](http://i.imgur.com/GVC3KPE.gif)
 
@@ -12,7 +12,7 @@ $ npm install react-dform
 
 # Example
 
- In the following example, the `schema` variable defines a schema in which `input3` and `input4` are only shown if `input1` is `true` _and_ `input2` is not empty:
+ In the following example, the `schema` variable defines a schema in which `input3` is only shown if `input1` is `true` _and_ `input2` is not empty:
 
 ```javascript
 import React from 'react'
@@ -71,6 +71,10 @@ ReactDOM.render(
 
 # Running the editor
 
+There are two ways to run the editor:
+
+1. In your own app:
+
 ```javascript
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -89,6 +93,14 @@ ReactDOM.render(
   document.getElementById('react-app'),
 );
 ```
+
+2. Cloning this repo and running:
+
+```sh
+$ npm run watch
+```
+
+This will run a dev server with the editor on http://localhost:8080/.
 
 # License
 

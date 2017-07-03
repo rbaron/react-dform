@@ -13,6 +13,20 @@ export const exampleSchema = {
       type: 'string',
       id: 'input2',
       label: 'input2label',
+    }, {
+      type: 'options',
+      id: 'inputoptid',
+      label: 'inputoptlabel',
+      options: [{
+        id: 'optid1',
+        label: 'optid1label',
+      }, {
+        id: 'optid2',
+        label: 'optid2label',
+      }, {
+        id: 'optid3',
+        label: 'optid3label',
+      }],
     }],
     children: [{
       cond: {
@@ -21,7 +35,7 @@ export const exampleSchema = {
             type: 'truthy',
             field_id: 'input1',
         }, {
-            type: 'not_empty',
+            type: 'truthy',
             field_id: 'input2',
         }],
       },
@@ -49,6 +63,16 @@ export const exampleSchemaLabelAsKeys = {
     }, {
       type: 'string',
       label: 'input2label',
+    }, {
+      type: 'options',
+      label: 'inputoptlabel',
+      options: [{
+        label: 'optid1label',
+      }, {
+        label: 'optid2label',
+      }, {
+        label: 'optid3label',
+      }],
     }],
     children: [{
       cond: {
@@ -57,7 +81,7 @@ export const exampleSchemaLabelAsKeys = {
             type: 'truthy',
             field_id: 'input1label',
         }, {
-            type: 'not_empty',
+            type: 'truthy',
             field_id: 'input2label',
         }],
       },

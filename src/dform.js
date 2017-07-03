@@ -9,6 +9,11 @@ class DForm extends React.Component {
     schema: PropTypes.object.isRequired,
     state: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
+    useLabelsAsKeys: PropTypes.bool.isRequired,
+  }
+
+  static defaultProps = {
+    useLabelsAsKeys: false,
   }
 
   constructor(props) {
@@ -20,39 +25,46 @@ class DForm extends React.Component {
     }
   }
 
+  _makeKey(args) {
+    return this.props.useLabelsAsKeys ? args.label : args.id;
+  }
+
   booleanFactory(args) {
     const { state } = this.props
+    const key = this._makeKey(args);
     return (
-      <div key={args.id}>
-        <label htmlFor={args.id}>{args.label}</label>
-        <input
-            type="checkbox"
-            id={args.id}
-            value={state[args.id] || false}
-            onChange={e => this.onChange(args.id, e.target.checked)} />
+      <div key={key}>
+        <label htmlFor={key}>{args.label}
+          <input
+              type="checkbox"
+              id={key}
+              checked={state[key] || false}
+              onChange={e => this.onChange(key, e.target.checked)} />
+        </label>
       </div>
     )
   }
 
   stringFactory(args) {
     const { state } = this.props
+    const key = this._makeKey(args);
     return (
-      <div key={args.id}>
-        <label htmlFor={args.id}>{args.label}</label>
+      <div key={key}>
+        <label htmlFor={key}>{args.label}</label>
         <input
             type="text"
-            id={args.id}
-            value={state[args.id] || ''}
-            onChange={e => this.onChange(args.id, e.target.value)} />
+            id={key}
+            value={state[key] || ''}
+            onChange={e => this.onChange(key, e.target.value)} />
       </div>
     )
   }
 
-  onChange(id, newVal) {
+  onChange(key, newVal) {
     const { onChange, state } = this.props
     this.props.onChange({
       ...state,
-      [id]: newVal,
+      [key]: newVal,
     });
   }
 

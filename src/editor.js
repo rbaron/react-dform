@@ -1,58 +1,35 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { StyleSheet, css } from 'aphrodite';
+import { StyleSheet, css } from 'aphrodite'
 
 import { DForm } from './dform'
+import { exampleSchema, exampleSchemaLabelAsKeys } from './exampleSchemas'
 
-const defaultSchema = {
-    cond: {
-      type: 'equals',
-      field_id: 'showForm',
-      field_value: true,
-    },
-    fields: [{
-      type: 'boolean',
-      id: 'input1',
-      label: 'input1',
-    }, {
-      type: 'string',
-      id: 'input2',
-      label: 'input2',
-    }],
-    children: [{
-      cond: {
-        type: 'and',
-        conds: [{
-            type: 'truthy',
-            field_id: 'input1',
-        }, {
-            type: 'not_empty',
-            field_id: 'input2',
-        }],
-      },
-      fields: [{
-          type: 'boolean',
-          id: 'input3',
-          label: 'input3',
-      }, {
-          type: 'string',
-          id: 'input4',
-          label: 'input4',
-      }],
-    }],
-}
 
 const styles = StyleSheet.create({
   app: {
     display: 'flex',
     height: '100%',
   },
-  col: {
-    width: '50%',
+  editorCol: {
+    width: '40%',
+  },
+  formCol: {
+    width: '30%',
+  },
+  formStateCol: {
+    width: '30%',
+  },
+  table: {
+    'border-collapse': 'collapse',
+  },
+  borderTable: {
+    'border': '1px solid black',
+    padding: 4,
   },
   textarea: {
-    width: '80%',
+    width: '90%',
     'font-size': '15px',
   },
 })
@@ -60,26 +37,41 @@ const styles = StyleSheet.create({
 class SchemaEditor extends React.Component {
   static propTypes = {
     defaultSchema: PropTypes.object,
-    onSchemaChange: PropTypes.func,
+    onSchemaChange: PropTypes.func.isRequired,
+    useLabelsAsKeys: PropTypes.bool.isRequired,
   }
 
   static defaultProps = {
-    defaultSchema: defaultSchema,
     onSchemaChange: () => {},
+    useLabelsAsKeys: false,
   }
 
   constructor(props) {
     super(props)
-    this.state = {
-      schema: props.defaultSchema,
-      schemaText: JSON.stringify(props.defaultSchema, null, 2),
+
+    this.state = this._makeInitialState(props)
+    this.onFormChange = this.onFormChange.bind(this)
+    this.onSchemaChange = this.onSchemaChange.bind(this)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.useLabelsAsKeys !== this.props.useLabelsAsKeys) {
+      this.setState(this._makeInitialState(nextProps))
+    }
+  }
+
+  _makeInitialState(props) {
+    const schema = props.defaultSchema || (props.useLabelsAsKeys ? exampleSchemaLabelAsKeys : exampleSchema)
+
+    return {
+      schema,
+      schemaText: JSON.stringify(schema, null, 2),
       schemaError: null,
       formState: {
         showForm: true,
       },
     }
-    this.onFormChange = this.onFormChange.bind(this)
-    this.onSchemaChange = this.onSchemaChange.bind(this)
+
   }
 
   onFormChange(newFormState) {
@@ -116,14 +108,31 @@ class SchemaEditor extends React.Component {
       <DForm
           onChange={this.onFormChange}
           state={this.state.formState}
-          schema={this.state.schema} />
+          schema={this.state.schema}
+          useLabelsAsKeys={this.props.useLabelsAsKeys} />
+    )
+  }
+
+  renderFormState() {
+    return (
+      <table className={css(styles.table)}>
+        <tbody>
+          { Object.entries(this.state.formState).map(([k, v]) => (
+              <tr key={k}>
+                <td className={css(styles.borderTable)}>{k}</td>
+                <td className={css(styles.borderTable)}>{`${v}`}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
     )
   }
 
   render() {
     return (
       <div className={css(styles.app)}>
-        <div className={css(styles.col)}>
+        <div className={css(styles.editorCol)}>
           <h1>Schema</h1>
           <textarea
               className={css(styles.textarea)}
@@ -131,9 +140,13 @@ class SchemaEditor extends React.Component {
               value={this.state.schemaText}
               onChange={e => this.onSchemaChange(e.target.value)}/>
         </div>
-        <div className={css(styles.col)}>
+        <div className={css(styles.formCol)}>
           <h1>Form</h1>
           { this.renderForm() }
+        </div>
+        <div className={css(styles.formStateCol)}>
+          <h1>State</h1>
+          { this.renderFormState() }
         </div>
       </div>
     )

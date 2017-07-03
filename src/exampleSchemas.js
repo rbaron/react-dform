@@ -1,9 +1,7 @@
 
 export const exampleSchema = {
     cond: {
-      type: 'equals',
-      field_id: 'showForm',
-      field_value: true,
+      type: 'always_true',
     },
     fields: [{
       type: 'boolean',
@@ -53,9 +51,7 @@ export const exampleSchema = {
 
 export const exampleSchemaLabelAsKeys = {
     cond: {
-      type: 'equals',
-      field_id: 'showForm',
-      field_value: true,
+      type: 'always_true',
     },
     fields: [{
       type: 'boolean',

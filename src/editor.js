@@ -68,7 +68,6 @@ class SchemaEditor extends React.Component {
       schemaText: JSON.stringify(schema, null, 2),
       schemaError: null,
       formState: {
-        showForm: true,
       },
     }
 

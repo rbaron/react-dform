@@ -7,7 +7,7 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      useLabelsAsKeys: false,
+      useLabelsAsKeys: true,
     }
   }
 
@@ -24,6 +24,7 @@ class App extends React.Component {
           </label>
         </div>
         <SchemaEditor
+            allowedKeys={null}
             useLabelsAsKeys={this.state.useLabelsAsKeys} />
       </div>
     );

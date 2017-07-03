@@ -3,8 +3,16 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { StyleSheet, css } from 'aphrodite'
 
+import brace from 'brace';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/json'
+import 'brace/theme/github'
+
+
 import { DForm } from './dform'
 import { exampleSchema, exampleSchemaLabelAsKeys } from './exampleSchemas'
+import { validateSchema } from './validation'
 
 
 const styles = StyleSheet.create({
@@ -37,6 +45,7 @@ const styles = StyleSheet.create({
 
 class SchemaEditor extends React.Component {
   static propTypes = {
+    allowedKeys: PropTypes.instanceOf(Set),
     defaultSchema: PropTypes.object,
     onSchemaChange: PropTypes.func.isRequired,
     useLabelsAsKeys: PropTypes.bool.isRequired,
@@ -53,12 +62,22 @@ class SchemaEditor extends React.Component {
     this.state = this._makeInitialState(props)
     this.onFormChange = this.onFormChange.bind(this)
     this.onSchemaChange = this.onSchemaChange.bind(this)
+    this._keyExtractor = this._keyExtractor.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.useLabelsAsKeys !== this.props.useLabelsAsKeys) {
-      this.setState(this._makeInitialState(nextProps))
+      this.setState(this._makeInitialState(nextProps), () =>
+        this.onSchemaChange(this.state.schemaText))
     }
+  }
+
+  componentDidMount() {
+    this.onSchemaChange(this.state.schemaText)
+  }
+
+  _keyExtractor(args) {
+    return this.props.useLabelsAsKeys ? args.label : args.id;
   }
 
   _makeInitialState(props) {
@@ -71,7 +90,6 @@ class SchemaEditor extends React.Component {
       formState: {
       },
     }
-
   }
 
   onFormChange(newFormState) {
@@ -80,17 +98,16 @@ class SchemaEditor extends React.Component {
 
   onSchemaChange(newSchema) {
     this.setState({schemaText: newSchema})
+
     try {
-      const json = JSON.parse(newSchema)
+      const json = validateSchema(newSchema, this._keyExtractor, this.props.allowedKeys)
       this.setState({
         schema: json,
         schemaError: null,
       })
       this.props.onSchemaChange(json)
     } catch (e) {
-      if (e instanceof SyntaxError) {
-        this.setState({schemaError: e.message});
-      }
+      this.setState({schemaError: e.message});
     }
   }
 
@@ -106,6 +123,7 @@ class SchemaEditor extends React.Component {
 
     return (
       <DForm
+          keyExtractor={this._keyExtractor}
           onChange={this.onFormChange}
           state={this.state.formState}
           schema={this.state.schema}
@@ -134,11 +152,14 @@ class SchemaEditor extends React.Component {
       <div className={css(styles.app)}>
         <div className={css(styles.editorCol)}>
           <h1>Schema</h1>
-          <textarea
-              className={css(styles.textarea)}
-              rows={30}
+          <AceEditor
+              mode="json"
+              theme="github"
               value={this.state.schemaText}
-              onChange={e => this.onSchemaChange(e.target.value)}/>
+              onChange={schemaText => this.onSchemaChange(schemaText)}
+              name="schema-editor-123"
+              editorProps={{$blockScrolling: Infinity}}
+          />
         </div>
         <div className={css(styles.formCol)}>
           <h1>Form</h1>

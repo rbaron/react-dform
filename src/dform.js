@@ -14,14 +14,14 @@ const styles = StyleSheet.create({
 
 class DForm extends React.Component {
   static propTypes = {
+    keyExtractor: PropTypes.func.isRequired,
     schema: PropTypes.object.isRequired,
     state: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-    useLabelsAsKeys: PropTypes.bool.isRequired,
   }
 
   static defaultProps = {
-    useLabelsAsKeys: false,
+    keyExtractor: field => field.id,
   }
 
   constructor(props) {
@@ -34,13 +34,9 @@ class DForm extends React.Component {
     }
   }
 
-  _makeKey(args) {
-    return this.props.useLabelsAsKeys ? args.label : args.id;
-  }
-
   booleanFactory(args) {
-    const { state } = this.props
-    const key = this._makeKey(args);
+    const { keyExtractor, state } = this.props
+    const key = keyExtractor(args);
     return (
       <div key={key} className={css(styles.line)}>
         <label htmlFor={key}>{args.label}</label>
@@ -54,14 +50,14 @@ class DForm extends React.Component {
   }
 
   optionsFactory(args) {
-    const { state } = this.props
-    const key = this._makeKey(args)
+    const { keyExtractor, state } = this.props
+    const key = keyExtractor(args)
     const optsWithUndef = [
       {id: undefined, label: undefined},
       ...args.options,
     ]
     const opts = optsWithUndef.map(option => {
-      const key = this._makeKey(option)
+      const key = keyExtractor(option)
       return <option key={key || 'undef'} value={key}>{option.label}</option>
     })
     return (
@@ -78,8 +74,8 @@ class DForm extends React.Component {
   }
 
   stringFactory(args) {
-    const { state } = this.props
-    const key = this._makeKey(args);
+    const { keyExtractor, state } = this.props
+    const key = keyExtractor(args);
     return (
       <div key={key} className={css(styles.line)}>
         <label htmlFor={key}>{args.label}</label>

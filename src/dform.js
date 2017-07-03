@@ -2,7 +2,15 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { renderForm } from 'dform'
+import { StyleSheet, css } from 'aphrodite'
 
+const styles = StyleSheet.create({
+  line: {
+    display: 'flex',
+    'justify-content': 'space-between',
+    'word-wrap': 'break-all',
+  },
+})
 
 class DForm extends React.Component {
   static propTypes = {
@@ -34,14 +42,13 @@ class DForm extends React.Component {
     const { state } = this.props
     const key = this._makeKey(args);
     return (
-      <div key={key}>
-        <label htmlFor={key}>{args.label}
-          <input
-              type="checkbox"
-              id={key}
-              checked={state[key] || false}
-              onChange={e => this.onChange(key, e.target.checked)} />
-        </label>
+      <div key={key} className={css(styles.line)}>
+        <label htmlFor={key}>{args.label}</label>
+        <input
+            type="checkbox"
+            id={key}
+            checked={state[key] || false}
+            onChange={e => this.onChange(key, e.target.checked)} />
       </div>
     )
   }
@@ -58,7 +65,7 @@ class DForm extends React.Component {
       return <option key={key || 'undef'} value={key}>{option.label}</option>
     })
     return (
-      <div key={key}>
+      <div key={key} className={css(styles.line)}>
         <label htmlFor={key}>{args.label}</label>
         <select
             id={key}
@@ -74,7 +81,7 @@ class DForm extends React.Component {
     const { state } = this.props
     const key = this._makeKey(args);
     return (
-      <div key={key}>
+      <div key={key} className={css(styles.line)}>
         <label htmlFor={key}>{args.label}</label>
         <input
             type="text"

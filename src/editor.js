@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
   },
   formCol: {
     width: '30%',
+    'padding-right': '30px',
   },
   formStateCol: {
     width: '30%',

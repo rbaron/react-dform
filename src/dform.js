@@ -56,9 +56,9 @@ class DForm extends React.Component {
       {id: undefined, label: undefined},
       ...args.options,
     ]
-    const opts = optsWithUndef.map(option => {
+    const opts = optsWithUndef.map((option, i) => {
       const key = keyExtractor(option)
-      return <option key={key || 'undef'} value={key}>{option.label}</option>
+      return <option key={i} value={key}>{option.label}</option>
     })
     return (
       <div key={key} className={css(styles.line)}>
@@ -88,6 +88,15 @@ class DForm extends React.Component {
     )
   }
 
+  renderForm() {
+    const { state, schema } = this.props
+    try {
+      return renderForm(state, schema, this.inputFactories)
+    } catch (e) {
+      return `Error while rendering form: ${e}`;
+    }
+  }
+
   onChange(key, newVal) {
     const { onChange, state } = this.props
     this.props.onChange({
@@ -97,10 +106,9 @@ class DForm extends React.Component {
   }
 
   render() {
-    const { state, schema } = this.props
     return (
       <div>
-      { renderForm(state, schema, this.inputFactories) }
+        { this.renderForm() }
       </div>
     )
   }

@@ -66,8 +66,14 @@ class SchemaEditor extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.useLabelsAsKeys !== this.props.useLabelsAsKeys) {
+    // Only re-set state if defaultSchema changes
+    if (nextProps.defaultSchema !== this.props.defaultSchema) {
       this.setState(this._makeInitialState(nextProps), () =>
+        this.onSchemaChange(this.state.schemaText))
+
+    // Otherwise just re-run the validations
+    } else {
+      this.setState({}, () =>
         this.onSchemaChange(this.state.schemaText))
     }
   }

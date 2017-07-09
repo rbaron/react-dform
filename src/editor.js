@@ -9,6 +9,14 @@ import AceEditor from 'react-ace';
 import 'brace/mode/json'
 import 'brace/theme/github'
 
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
 
 import { DForm } from './dform'
 import { exampleSchema, exampleSchemaLabelAsKeys } from './exampleSchemas'
@@ -139,17 +147,23 @@ class SchemaEditor extends React.Component {
 
   renderFormState() {
     return (
-      <table className={css(styles.table)}>
-        <tbody>
+      <Table selectable={false}>
+        <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
+          <TableRow>
+            <TableHeaderColumn>key</TableHeaderColumn>
+            <TableHeaderColumn>value</TableHeaderColumn>
+          </TableRow>
+        </TableHeader>
+        <TableBody stripedRows={false} displayRowCheckbox={false}>
           { Object.entries(this.state.formState).map(([k, v]) => (
-              <tr key={k}>
-                <td className={css(styles.borderTable)}>{k}</td>
-                <td className={css(styles.borderTable)}>{`${v}`}</td>
-              </tr>
+              <TableRow key={k}>
+                <TableRowColumn>{k}</TableRowColumn>
+                <TableRowColumn>{`${v}`}</TableRowColumn>
+              </TableRow>
             ))
           }
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     )
   }
 
@@ -168,11 +182,11 @@ class SchemaEditor extends React.Component {
           />
         </div>
         <div className={css(styles.formCol)}>
-          <h1>Form</h1>
+          <h1>Form Simulation</h1>
           { this.renderForm() }
         </div>
         <div className={css(styles.formStateCol)}>
-          <h1>State</h1>
+          <h1>State Simulation</h1>
           { this.renderFormState() }
         </div>
       </div>

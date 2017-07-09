@@ -12,6 +12,14 @@ export const exampleSchema = {
       id: 'input2',
       label: 'input2label',
     }, {
+      type: 'date',
+      id: 'dateinputid',
+      label: 'dateinputlabel',
+    }, {
+      type: 'time',
+      id: 'timeinputid',
+      label: 'timeinputlabel',
+    }, {
       type: 'options',
       id: 'inputoptid',
       label: 'inputoptlabel',
@@ -59,6 +67,12 @@ export const exampleSchemaLabelAsKeys = {
     }, {
       type: 'string',
       label: 'input2label',
+    }, {
+      type: 'date',
+      label: 'dateinputlabel',
+    }, {
+      type: 'time',
+      label: 'timeinputlabel',
     }, {
       type: 'options',
       label: 'inputoptlabel',

@@ -3,7 +3,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { activeFields, defaultState, renderForm } from 'dform'
 import { StyleSheet, css } from 'aphrodite'
+import moment from 'moment'
 
+import DatePicker from 'material-ui/DatePicker';
+import TimePicker from 'material-ui/TimePicker';
 import Toggle from 'material-ui/Toggle'
 import TextField from 'material-ui/TextField'
 import SelectField from 'material-ui/SelectField';
@@ -11,11 +14,13 @@ import MenuItem from 'material-ui/MenuItem';
 
 
 const styles = StyleSheet.create({
-  line: {
+  'boolean': {
+    'margin-top': '10px',
+  },
+  'line': {
     'display': 'flex',
     'justify-content': 'space-between',
     'word-wrap': 'break-all',
-    'margin': '10px 0',
   },
 })
 
@@ -35,8 +40,10 @@ class DForm extends React.Component {
 
     this.inputFactories = {
       'boolean': this.booleanFactory.bind(this),
-      'string': this.stringFactory.bind(this),
+      'date': this.dateFactory.bind(this),
       'options': this.optionsFactory.bind(this),
+      'string': this.stringFactory.bind(this),
+      'time': this.timeFactory.bind(this),
     }
     this.state = defaultState(props.schema, props.keyExtractor)
   }
@@ -57,13 +64,26 @@ class DForm extends React.Component {
     const { keyExtractor } = this.props
     const key = keyExtractor(args);
     return (
-      <div key={key} className={css(styles.line)}>
+      <div key={key} className={[css(styles.boolean)]}>
         <Toggle
           label={args.label}
           toggled={this.state[key]}
           onToggle={(evt, checked) => this.onChange(key, checked)}
         />
       </div>
+    )
+  }
+
+  dateFactory(args) {
+    const { keyExtractor } = this.props
+    const key = keyExtractor(args);
+    return (
+      <DatePicker
+        key={key}
+        textFieldStyle={{width: '100%'}}
+        floatingLabelText={args.label}
+        onChange={(evt, date) => this.onChange(key, moment(date).format())}
+      />
     )
   }
 
@@ -104,6 +124,20 @@ class DForm extends React.Component {
           onChange={(evt, val) => this.onChange(key, val)}
         />
       </div>
+    )
+  }
+
+  timeFactory(args) {
+    const { keyExtractor } = this.props
+    const key = keyExtractor(args);
+    return (
+      <TimePicker
+        key={key}
+        floatingLabelText={args.label}
+        format={'24hr'}
+        fullWidth={true}
+        onChange={(evt, date) => this.onChange(key, moment(date).format('HH:mm'))}
+      />
     )
   }
 

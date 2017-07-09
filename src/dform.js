@@ -4,11 +4,18 @@ import ReactDOM from 'react-dom'
 import { activeFields, defaultState, renderForm } from 'dform'
 import { StyleSheet, css } from 'aphrodite'
 
+import Toggle from 'material-ui/Toggle'
+import TextField from 'material-ui/TextField'
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+
+
 const styles = StyleSheet.create({
   line: {
-    display: 'flex',
+    'display': 'flex',
     'justify-content': 'space-between',
     'word-wrap': 'break-all',
+    'margin': '10px 0',
   },
 })
 
@@ -51,12 +58,11 @@ class DForm extends React.Component {
     const key = keyExtractor(args);
     return (
       <div key={key} className={css(styles.line)}>
-        <label htmlFor={key}>{args.label}</label>
-        <input
-            type="checkbox"
-            id={key}
-            checked={this.state[key] || false}
-            onChange={e => this.onChange(key, e.target.checked)} />
+        <Toggle
+          label={args.label}
+          toggled={this.state[key]}
+          onToggle={(evt, checked) => this.onChange(key, checked)}
+        />
       </div>
     )
   }
@@ -70,17 +76,18 @@ class DForm extends React.Component {
     ]
     const opts = optsWithUndef.map((option, i) => {
       const key = keyExtractor(option)
-      return <option key={i} value={key}>{option.label}</option>
+      return <MenuItem key={i} value={key} primaryText={option.label} />
     })
     return (
       <div key={key} className={css(styles.line)}>
-        <label htmlFor={key}>{args.label}</label>
-        <select
-            id={key}
-            value={this.state[key] || ''}
-            onChange={e => this.onChange(key, e.target.value)}>
+        <SelectField
+          floatingLabelText={args.label}
+          fullWidth={true}
+          value={this.state[key]}
+          onChange={(evt, idx, val) => this.onChange(key, val)}
+        >
           {opts}
-        </select>
+        </SelectField>
       </div>
     )
   }
@@ -90,12 +97,12 @@ class DForm extends React.Component {
     const key = keyExtractor(args);
     return (
       <div key={key} className={css(styles.line)}>
-        <label htmlFor={key}>{args.label}</label>
-        <input
-            type="text"
-            id={key}
-            value={this.state[key] || ''}
-            onChange={e => this.onChange(key, e.target.value)} />
+        <TextField
+          floatingLabelText={args.label}
+          fullWidth={true}
+          multiLine={true}
+          onChange={(evt, val) => this.onChange(key, val)}
+        />
       </div>
     )
   }

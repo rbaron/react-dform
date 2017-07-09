@@ -1551,9 +1551,9 @@ detect-indent@^4.0.0:
   dependencies:
     repeating "^2.0.0"
 
-dform@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/dform/-/dform-1.1.0.tgz#ebfa00ddd4c0e7ae06b1bb863fb71fcb75d1464c"
+dform@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/dform/-/dform-1.2.0.tgz#4fea91495b050e1037b702bfe7662015d8b20790"
 
 diff@^3.2.0:
   version "3.2.0"

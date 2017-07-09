@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { activeFields, renderForm } from 'dform'
+import { activeFields, defaultState, renderForm } from 'dform'
 import { StyleSheet, css } from 'aphrodite'
 
 const styles = StyleSheet.create({
@@ -31,7 +31,19 @@ class DForm extends React.Component {
       'string': this.stringFactory.bind(this),
       'options': this.optionsFactory.bind(this),
     }
-    this.state = {}
+    this.state = defaultState(props.schema, props.keyExtractor)
+  }
+
+  componentWillMount() {
+    this.props.onChange(this.filterState())
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.schema !== this.props.schema) {
+      this.setState(
+        defaultState(nextProps.schema, nextProps.keyExtractor),
+        () => nextProps.onChange(this.filterState()))
+    }
   }
 
   booleanFactory(args) {

@@ -179,6 +179,9 @@ class SchemaEditor extends React.Component {
               onChange={schemaText => this.onSchemaChange(schemaText)}
               name="schema-editor-123"
               editorProps={{$blockScrolling: Infinity}}
+              setOptions={{
+                tabSize: 2,
+              }}
           />
         </div>
         <div className={css(styles.formCol)}>

@@ -1,89 +1,57 @@
 # react-dform
 
-Schema-based dynamic forms for React. It uses the schema defined as expected by [dform](https://github.com/rbaron/dform). In addition to the dynamic form component (`DForm`), there's also a built-in `SchemaEditor` component for creating and validating schemas:
+<p align="center">
+  <img src="http://i.imgur.com/NQryLC7.gif" />
+</p>
 
-![Built-in schema editor](http://i.imgur.com/GVC3KPE.gif)
+[dform](https://github.com/rbaron/dform) is a set of libraries for managing dynamic forms. The dynamic forms are described through a JSON schema. Client libraries, such as this one, read a dform JSON schema and render forms accordingly.
+
+This repository hosts a React client library for the web that takes as input a dform JSON schema and renders the appropiate dynamic form.
+
+For React Native applications, check out [react-native-dform](https://github.com/rbaron/react-native-dform).
 
 # Installation
 
 ```sh
 $ npm install react-dform
 ```
+or
+```sh
+$ yarn add react-dform
+```
+
+# Usage
+
+This package exports a `<DForm>` component, which receives a `schema` prop and also a `onChange` callback function, which will be called whenever there's a change in the form's state.
 
 # Example
 
- In the following example, the `schema` variable defines a schema in which `input3` is only shown if `input1` is `true` _and_ `input2` is not empty:
+This example is available in the `app/` directory.
 
 ```javascript
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { DForm } from 'react-dform'
-
-const schema = {
-  cond: {
-    type: 'always_true',
-  },
-  fields: [{
-    type: 'boolean',
-    id: 'input1',
-    label: 'input1',
-  }, {
-    type: 'string',
-    id: 'input2',
-    label: 'input2',
-  }],
-  children: [{
-    cond: {
-      type: 'and',
-      conds: [{
-        type: 'truthy',
-        field_id: 'input1',
-      }, {
-        type: 'not_empty',
-        field_id: 'input2',
-      }],
-    },
-    fields: [{
-      type: 'boolean',
-      id: 'input3',
-      label: 'input3',
-    }],
-  }],
-}
+import { DForm } from '../src'
+import { exampleLabelsGif } from '../src/exampleSchemas'
 
 class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
+
+  onFormChange = newState => {
+    console.log('New form state:', newState)
   }
+
+  keyExtractor = field => field.label
+
   render() {
     return (
-      <DForm schema={schema} state={this.state} onChange={this.setState.bind(this)} />
-    )
-  }
-}
-
-ReactDOM.render(
-  <App />,
-  document.getElementById('react-app'),
-)
-```
-
-# Running the editor
-
-There are two ways to run the editor:
-
-1. In your own app:
-
-```javascript
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { SchemaEditor } from 'react-dform'
-
-class App extends React.Component {
-  render() {
-    return (
-      <SchemaEditor onSchemaChange={s => console.log('New valid schema:', s)} />
+      <div>
+        <h1>Example dynamic form</h1>
+        <DForm
+            keyExtractor={this.keyExtractor}
+            onChange={this.onFormChange}
+            schema={exampleLabelsGif}
+         />
+      </div>
     )
   }
 }
@@ -94,7 +62,59 @@ ReactDOM.render(
 );
 ```
 
-2. Cloning this repo and running:
+The variable `exampleLabelsGif` contains the following dform schema, which describes the dynamic behavior of the form:
+
+```javascript
+export const exampleLabelsGif = {
+  cond: {
+    type: 'always_true'
+  },
+  fields: [{
+    type: 'boolean',
+    label: 'Example boolean'
+  }, {
+    type: 'options',
+    label: 'Example options',
+    options: [{
+      label: 'Option #1'
+    }, {
+      label: 'Option #2'
+    }, {
+      label: 'Option #3'
+    }],
+  }],
+  children: [{
+    cond: {
+      type: 'and',
+      conds: [{
+        type: 'truthy',
+        field_id: 'Example boolean'
+      }, {
+        type: 'equals',
+        field_id: 'Example options',
+        field_value: 'Option #2'
+      }],
+    },
+    fields: [{
+      type: 'string',
+      label: 'Example string'
+    }],
+    children: [{
+      cond: {
+        type: 'equals',
+        field_id: 'Example string',
+        field_value: 'Expected value',
+      },
+      fields: [{
+        type: 'date',
+        label: 'Example date',
+      }],
+    }],
+  }],
+}
+```
+
+To try this example, clone this repository and run:
 
 ```sh
 $ npm run watch
@@ -104,4 +124,4 @@ This will run a dev server with the editor on http://localhost:8080/.
 
 # License
 
-MIT
+MIT.

@@ -5,6 +5,9 @@ import { activeFields, defaultState, renderForm } from 'dform'
 import { StyleSheet, css } from 'aphrodite'
 import moment from 'moment'
 
+import injectTapEventPlugin from 'react-tap-event-plugin'
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import Toggle from 'material-ui/Toggle'
@@ -36,6 +39,8 @@ class DForm extends React.Component {
   }
 
   constructor(props) {
+    injectTapEventPlugin()
+
     super(props)
 
     this.inputFactories = {
@@ -76,13 +81,16 @@ class DForm extends React.Component {
 
   dateFactory(args) {
     const { keyExtractor } = this.props
-    const key = keyExtractor(args);
+    const key = keyExtractor(args)
+    const format = args.format || 'YYYY-MM-DD'
     return (
       <DatePicker
         key={key}
         textFieldStyle={{width: '100%'}}
         floatingLabelText={args.label}
-        onChange={(evt, date) => this.onChange(key, moment(date).format())}
+        formatDate={d => moment(d).format(format)}
+        onChange={(evt, date) => this.onChange(key, moment(date).format(format))}
+        value={this.state[key] ? new Date(moment(this.state[key], format).format()) : undefined}
       />
     )
   }
@@ -114,7 +122,7 @@ class DForm extends React.Component {
 
   stringFactory(args) {
     const { keyExtractor } = this.props
-    const key = keyExtractor(args);
+    const key = keyExtractor(args)
     return (
       <div key={key} className={css(styles.line)}>
         <TextField
@@ -122,6 +130,7 @@ class DForm extends React.Component {
           fullWidth={true}
           multiLine={true}
           onChange={(evt, val) => this.onChange(key, val)}
+          value={this.state[key]}
         />
       </div>
     )
@@ -129,14 +138,18 @@ class DForm extends React.Component {
 
   timeFactory(args) {
     const { keyExtractor } = this.props
-    const key = keyExtractor(args);
+    const key = keyExtractor(args)
+    const format = args.format || '24hr'
+
+    console.log('time', this.state[key])
     return (
       <TimePicker
         key={key}
         floatingLabelText={args.label}
-        format={'24hr'}
+        format={format}
         fullWidth={true}
         onChange={(evt, date) => this.onChange(key, moment(date).format('HH:mm'))}
+        value={this.state[key] ? new Date(moment(this.state[key], 'HH:mm').format()) : undefined}
       />
     )
   }
@@ -171,9 +184,11 @@ class DForm extends React.Component {
 
   render() {
     return (
-      <div>
-        { this.renderForm() }
-      </div>
+      <MuiThemeProvider>
+        <div>
+          { this.renderForm() }
+        </div>
+      </MuiThemeProvider>
     )
   }
 }

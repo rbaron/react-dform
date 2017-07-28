@@ -2,4 +2,4 @@
 lib
 node_modules
 
-editor/bundle.js
+app/bundle.js

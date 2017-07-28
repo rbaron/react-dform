@@ -5,9 +5,6 @@ import { activeFields, defaultState, renderForm } from 'dform'
 import { StyleSheet, css } from 'aphrodite'
 import moment from 'moment'
 
-import injectTapEventPlugin from 'react-tap-event-plugin'
-
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import Toggle from 'material-ui/Toggle'
@@ -39,7 +36,6 @@ class DForm extends React.Component {
   }
 
   constructor(props) {
-    injectTapEventPlugin()
 
     super(props)
 
@@ -184,11 +180,9 @@ class DForm extends React.Component {
 
   render() {
     return (
-      <MuiThemeProvider>
-        <div>
-          { this.renderForm() }
-        </div>
-      </MuiThemeProvider>
+      <div>
+        { this.renderForm() }
+      </div>
     )
   }
 }

@@ -26,13 +26,20 @@ This package exports a `<DForm>` component, which receives a `schema` prop and a
 
 # Example
 
-This example is available in the `app/` directory.
+This example is available in the `app/` directory. Note that, since this library relies on `material-ui`
+for rendering each form input, it is unfortunately necessary to both call `injectTapEventPlugin()` and wrap
+our application in the `<MuiThemeProvider>` component.
+
 
 ```javascript
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { DForm } from '../src'
 import { exampleLabelsGif } from '../src/exampleSchemas'
+import injectTapEventPlugin from 'react-tap-event-plugin'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+
+injectTapEventPlugin()
 
 class App extends React.Component {
 
@@ -44,14 +51,16 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <h1>Example dynamic form</h1>
-        <DForm
-            keyExtractor={this.keyExtractor}
-            onChange={this.onFormChange}
-            schema={exampleLabelsGif}
-         />
-      </div>
+      <MuiThemeProvider>
+        <div>
+          <h1>Example dynamic form</h1>
+          <DForm
+              keyExtractor={this.keyExtractor}
+              onChange={this.onFormChange}
+              schema={exampleLabelsGif}
+           />
+        </div>
+      </MuiThemeProvider>
     )
   }
 }

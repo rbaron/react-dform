@@ -136,8 +136,6 @@ class DForm extends React.Component {
     const { keyExtractor } = this.props
     const key = keyExtractor(args)
     const format = args.format || '24hr'
-
-    console.log('time', this.state[key])
     return (
       <TimePicker
         key={key}
